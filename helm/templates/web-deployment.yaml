@@ -43,7 +43,7 @@ spec:
               done
       containers:
         - name: web
-          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          image: {{ required "image.repository is required (e.g. --set image.repository=ghcr.io/org/opencut-classic)" .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.web.port }}

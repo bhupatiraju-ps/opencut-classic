@@ -30,7 +30,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "opencut.fullname" . }}-secrets
                   key: SRH_TOKEN
-            - name: SRH_UPSTREAM_URL
+            - name: SRH_CONNECTION_STRING
               value: {{ printf "redis://%s-redis:6379" (include "opencut.fullname" .) | quote }}
           readinessProbe:
             httpGet:

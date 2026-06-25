@@ -18,6 +18,10 @@ spec:
         {{- include "opencut.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
       containers:
         - name: redis
           image: {{ .Values.redis.image }}
@@ -34,11 +38,11 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
           volumeMounts:
-            - name: redis-data
+            - name: data
               mountPath: /data
   volumeClaimTemplates:
     - metadata:
-        name: redis-data
+        name: data
       spec:
         accessModes: ["ReadWriteOnce"]
         {{- if .Values.redis.storageClassName }}
