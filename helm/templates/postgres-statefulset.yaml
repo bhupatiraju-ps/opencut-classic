@@ -18,10 +18,6 @@ spec:
         {{- include "opencut.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgres
     spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       containers:
         - name: postgres
           image: {{ .Values.postgres.image }}
