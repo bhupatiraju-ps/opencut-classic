@@ -1,0 +1,19 @@
+OpenCut Classic has been deployed!
+
+Web app:
+{{- if .Values.ingress.enabled }}
+  https://{{ .Values.ingress.host }}
+{{- else }}
+  kubectl port-forward svc/{{ include "opencut.fullname" . }}-web 3000:3000
+  open http://localhost:3000
+{{- end }}
+
+Health check:
+  curl http://localhost:3000/api/health
+
+Run database migrations (if needed):
+  kubectl exec -it deployment/{{ include "opencut.fullname" . }}-web -- bun db:migrate
+
+Secrets are stored in: {{ include "opencut.fullname" . }}-secrets
+Override sensitive values at install time — never commit real secrets to values.yaml:
+  helm upgrade opencut ./helm --set secrets.betterAuthSecret=<real-secret>

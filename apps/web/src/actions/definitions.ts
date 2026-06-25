@@ -194,6 +194,20 @@ export function getActionDefinition({
 	};
 }
 
+const ALL_ACTIONS: ReadonlySet<string> = new Set(Object.keys(ACTIONS));
+// Actions whose TActionArgsMap type does not include `undefined` — callers must
+// supply args at runtime, so they cannot be bound to a shortcut key alone.
+const MANDATORY_ARG_ACTIONS: ReadonlySet<string> = new Set([
+	"remove-media-asset",
+	"remove-media-assets",
+]);
+
+export function isActionWithOptionalArgs(
+	value: string,
+): value is TActionWithOptionalArgs {
+	return ALL_ACTIONS.has(value) && !MANDATORY_ARG_ACTIONS.has(value);
+}
+
 export function getDefaultShortcuts(): Map<
 	ShortcutKey,
 	TActionWithOptionalArgs

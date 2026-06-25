@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opencut.fullname" . }}-srh
+  labels:
+    {{- include "opencut.labels" . | nindent 4 }}
+    app.kubernetes.io/component: srh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "opencut.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: srh
+  template:
+    metadata:
+      labels:
+        {{- include "opencut.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: srh
+    spec:
+      containers:
+        - name: srh
+          image: {{ .Values.srh.image }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: SRH_MODE
+              value: "env"
+            - name: SRH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "opencut.fullname" . }}-secrets
+                  key: SRH_TOKEN
+            - name: SRH_UPSTREAM_URL
+              value: {{ printf "redis://%s-redis:6379" (include "opencut.fullname" .) | quote }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5

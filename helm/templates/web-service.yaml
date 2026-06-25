@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opencut.fullname" . }}-web
+  labels:
+    {{- include "opencut.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: {{ .Values.web.port }}
+  selector:
+    {{- include "opencut.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web

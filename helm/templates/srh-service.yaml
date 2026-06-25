@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opencut.fullname" . }}-srh
+  labels:
+    {{- include "opencut.labels" . | nindent 4 }}
+    app.kubernetes.io/component: srh
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    {{- include "opencut.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: srh

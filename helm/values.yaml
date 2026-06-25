@@ -1,0 +1,50 @@
+image:
+  repository: ""  # required: e.g. ghcr.io/org/opencut-classic
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+web:
+  replicaCount: 1
+  port: 3000
+  resources: {}
+
+postgres:
+  image: postgres:17
+  storage: 10Gi
+  storageClassName: ""  # leave empty to use the cluster default StorageClass
+  database: opencut
+  username: opencut
+
+redis:
+  image: redis:7-alpine
+  storage: 1Gi
+  storageClassName: ""
+
+srh:
+  # Serverless Redis HTTP — exposes Upstash-compatible REST API in front of Redis
+  image: hiett/serverless-redis-http:latest
+
+ingress:
+  enabled: false
+  className: ""
+  host: ""
+  tls: []
+  # tls:
+  #   - secretName: opencut-tls
+  #     hosts:
+  #       - opencut.example.com
+
+# Sensitive values — never commit real secrets here.
+# Override at install time:  --set secrets.betterAuthSecret=...
+# or pass a separate values file:  -f values-secrets.yaml
+secrets:
+  dbPassword: "opencut"
+  betterAuthSecret: "change-me"
+  srhToken: "example_token"
+  freesoundClientId: ""
+  freesoundApiKey: ""
+  marbleWorkspaceKey: ""
+
+config:
+  nextPublicSiteUrl: "http://localhost:3000"
+  nextPublicMarbleApiUrl: "https://api.marblecms.com"
